@@ -4,7 +4,7 @@ let file,
 	loadXYZfileInput,
 	description,
 	xyzStrings = [''],
-	maxDataLength = 250000,
+	maxDataLength = 1000000000, // amount of vertices before we sub-divide
 	xyzPointsInt = [
 		{
 			data: [[0]],
