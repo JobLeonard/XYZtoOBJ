@@ -17,24 +17,12 @@ let file,
 			data: [[0.0]],
 			xIdx: 0,
 			yIdx: 0,
-			xMin: 0,
-			xMax: 0,
-			yMin: 0,
-			yMax: 0,
-			zMin: 0,
-			zMax: 0,
 		}
 	],
 	triangles = [{
 		data: [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
 		xIdx: 0,
 		yIdx: 0,
-		xMin: 0,
-		xMax: 0,
-		yMin: 0,
-		yMax: 0,
-		zMin: 0,
-		zMax: 0,
 	}],
 	STLstring = [],
 	textFile = [],
@@ -286,26 +274,22 @@ function convertLatLon() {
 			zMin,
 			zMax,
 		} = findMinMax(data);
+		const convertedXmin = distance(0, 0, xMin, 0);
+		const convertedYmin = distance(0, 0, 0, yMin);
 		let convertedData = new Array(data.length);
 		for (let j = 0; j < data.length; j++) {
 			let point = data[j];
-			let x = (point[0] - xMin | 0) / 10;
-			let y = (point[1] - yMin | 0) / 10;
+			let x = (point[0] | 0) / 10;
+			let y = (point[1] | 0) / 10;
 			let z = (point[2] | 0) / 100;
-			x = distance(0, y, x, y);
-			y = distance(x, 0, x, y);
+			// x = distance(0, y, x, y) - convertedXmin;
+			// y = distance(x, 0, x, y) - convertedYmin;
 			convertedData[j] = [x, y, z];
 		}
 		xyzPointsFloat[i] = {
 			data: convertedData,
 			xIdx,
 			yIdx,
-			xMin: 0,
-			xMax: (xMax - xMin) / 10,
-			yMin: 0,
-			yMax: (yMax - yMin) / 10,
-			zMin: zMin / 100,
-			zMax: zMax / 100,
 		};
 	}
 
@@ -503,7 +487,7 @@ function exportSTLstring() {
 		// returns a URL you can use as a href
 		textFile[i] = window.URL.createObjectURL(filedata);
 
-		let filename = `${file.name}_${xIdx}_${yIdx}.stl`
+		let filename = `${file.name.split('.')[0]}.stl`
 		description.html('STLstring exported as ' + filename);
 		saveLink[i] = createA(textFile[i], 'Right click + save ' + filename)
 		saveLink[i].attribute('download', filename);
